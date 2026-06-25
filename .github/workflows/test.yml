@@ -1,0 +1,33 @@
+name: Test TaskMaster
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Setup Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.9'
+    
+    - name: Install system dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y python3-pyqt5 xvfb
+    
+    - name: Install Python dependencies
+      run: |
+        pip install pytest
+    
+    - name: Run tests with virtual display
+      run: |
+        xvfb-run pytest test_taskmaster.py -v
